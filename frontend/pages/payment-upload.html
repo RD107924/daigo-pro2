@@ -1,0 +1,489 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上傳付款證明 - 代購平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .upload-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .bank-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #EE4D2D;
+        }
+        .bank-info h3 {
+            color: #EE4D2D;
+            margin-bottom: 15px;
+        }
+        .bank-detail {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .bank-detail:last-child {
+            border-bottom: none;
+        }
+        .copy-btn {
+            background: #EE4D2D;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-btn:hover {
+            background: #D73211;
+        }
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin: 30px 0;
+            background: #fafafa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-area:hover {
+            border-color: #EE4D2D;
+            background: #FFF4EC;
+        }
+        .upload-area.dragover {
+            border-color: #EE4D2D;
+            background: #FFF4EC;
+        }
+        .upload-icon {
+            font-size: 48px;
+            color: #999;
+            margin-bottom: 20px;
+        }
+        .file-input {
+            display: none;
+        }
+        .preview-container {
+            margin: 20px 0;
+            display: none;
+        }
+        .preview-image {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-block;
+            margin: 10px;
+        }
+        .btn-primary {
+            background: #EE4D2D;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #D73211;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .order-info {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+        }
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: #ddd;
+        }
+        .step:last-child::after {
+            display: none;
+        }
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            background: #ddd;
+            color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .step.active .step-icon {
+            background: #EE4D2D;
+        }
+        .step.completed .step-icon {
+            background: #4CAF50;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #EE4D2D;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h1><i class="fas fa-file-invoice-dollar"></i> 上傳付款證明</h1>
+        
+        <div class="success-message">
+            <i class="fas fa-check-circle"></i> 訂單已建立成功！請完成付款
+        </div>
+        
+        <!-- 進度指示 -->
+        <div class="steps">
+            <div class="step completed">
+                <div class="step-icon"></div>
+                <div>建立訂單</div>
+            </div>
+            <div class="step active">
+                <div class="step-icon">2</div>
+                <div>付款</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">3</div>
+                <div>確認</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">4</div>
+                <div>發貨</div>
+            </div>
+        </div>
+        
+        <!-- 訂單資訊 -->
+        <div class="order-info">
+            <h4>訂單資訊</h4>
+            <p>訂單編號：<strong id="orderId">ORD20250115001</strong></p>
+            <p>訂單金額：<strong id="orderAmount">NT$ 0</strong></p>
+            <p>建立時間：<span id="orderTime">-</span></p>
+        </div>
+        
+        <!-- 銀行資訊 -->
+        <div class="bank-info">
+            <h3> 請轉帳至以下帳戶</h3>
+            <div class="bank-detail">
+                <span>銀行名稱：</span>
+                <div>
+                    <strong>台灣銀行 (004)</strong>
+                    <button class="copy-btn" onclick="copyText('台灣銀行')">複製</button>
+                </div>
+            </div>
+            <div class="bank-detail">
+                <span>帳號：</span>
+                <div>
+                    <strong>123-456-789012</strong>
+                    <button class="copy-btn" onclick="copyText('123456789012')">複製</button>
+                </div>
+            </div>
+            <div class="bank-detail">
+                <span>戶名：</span>
+                <div>
+                    <strong>代購平台有限公司</strong>
+                    <button class="copy-btn" onclick="copyText('代購平台有限公司')">複製</button>
+                </div>
+            </div>
+            <div class="bank-detail">
+                <span>轉帳金額：</span>
+                <div>
+                    <strong id="transferAmount" style="color: #EE4D2D;">NT$ 0</strong>
+                    <button class="copy-btn" onclick="copyAmount()">複製</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 上傳區域 -->
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h3>點擊或拖曳上傳付款證明</h3>
+            <p style="color: #999; margin-top: 10px;">支援 JPG、PNG、PDF 格式</p>
+            <input type="file" id="fileInput" class="file-input" accept="image/*,.pdf">
+        </div>
+        
+        <!-- 預覽區域 -->
+        <div class="preview-container" id="previewContainer">
+            <h4>預覽圖片</h4>
+            <img id="previewImage" class="preview-image" alt="付款證明預覽">
+            <div style="text-align: center; margin-top: 10px;">
+                <button class="btn btn-secondary" onclick="removeImage()">
+                    <i class="fas fa-trash"></i> 移除圖片
+                </button>
+            </div>
+        </div>
+        
+        <!-- 載入中 -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 10px;">上傳中，請稍候...</p>
+        </div>
+        
+        <!-- 按鈕區域 -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn btn-secondary" onclick="window.location.href='index.html'">
+                <i class="fas fa-arrow-left"></i> 返回首頁
+            </button>
+            <button class="btn btn-primary" id="submitBtn" onclick="submitPaymentProof()" disabled>
+                <i class="fas fa-check"></i> 提交付款證明
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        let uploadedFile = null;
+        let currentOrder = JSON.parse(localStorage.getItem('currentOrder')) || {};
+        
+        // 初始化訂單資訊
+        function initOrderInfo() {
+            const orderId = 'ORD' + Date.now();
+            document.getElementById('orderId').textContent = orderId;
+            
+            if (currentOrder.totalAmount) {
+                const amount = currentOrder.totalAmount;
+                document.getElementById('orderAmount').textContent = `NT$ ${amount.toLocaleString()}`;
+                document.getElementById('transferAmount').textContent = `NT$ ${amount.toLocaleString()}`;
+            }
+            
+            document.getElementById('orderTime').textContent = 
+                new Date().toLocaleString('zh-TW');
+        }
+        
+        // 檔案上傳處理
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        });
+        
+        // 拖放功能
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        });
+        
+        // 處理檔案
+        function handleFile(file) {
+            // 檢查檔案類型
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+            if (!validTypes.includes(file.type)) {
+                alert('請上傳圖片或 PDF 檔案');
+                return;
+            }
+            
+            // 檢查檔案大小 (最大 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('檔案大小不能超過 5MB');
+                return;
+            }
+            
+            uploadedFile = file;
+            
+            // 顯示預覽
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImage').src = e.target.result;
+                    document.getElementById('previewContainer').style.display = 'block';
+                    document.getElementById('uploadArea').style.display = 'none';
+                    document.getElementById('submitBtn').disabled = false;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // PDF 檔案
+                document.getElementById('previewContainer').style.display = 'block';
+                document.getElementById('uploadArea').style.display = 'none';
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('previewImage').style.display = 'none';
+            }
+        }
+        
+        // 移除圖片
+        function removeImage() {
+            uploadedFile = null;
+            document.getElementById('previewContainer').style.display = 'none';
+            document.getElementById('uploadArea').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('fileInput').value = '';
+        }
+        
+        // 複製文字
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                showNotification('已複製到剪貼簿');
+            });
+        }
+        
+        // 複製金額
+        function copyAmount() {
+            const amount = currentOrder.totalAmount || 0;
+            copyText(amount.toString());
+        }
+        
+        // 顯示通知
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 5px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideIn 0.3s;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // 提交付款證明
+        async function submitPaymentProof() {
+            if (!uploadedFile) {
+                alert('請先上傳付款證明');
+                return;
+            }
+            
+            // 顯示載入中
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            
+            // 模擬上傳
+            setTimeout(() => {
+                // 儲存訂單狀態
+                const order = {
+                    ...currentOrder,
+                    orderId: document.getElementById('orderId').textContent,
+                    status: 'payment_uploaded',
+                    paymentProof: uploadedFile.name,
+                    uploadedAt: new Date().toISOString()
+                };
+                
+                // 儲存到歷史訂單
+                const orders = JSON.parse(localStorage.getItem('orders')) || [];
+                orders.push(order);
+                localStorage.setItem('orders', JSON.stringify(orders));
+                
+                // 清除當前訂單
+                localStorage.removeItem('currentOrder');
+                
+                // 隱藏載入
+                document.getElementById('loading').style.display = 'none';
+                
+                // 顯示成功訊息
+                alert('付款證明已上傳成功！我們將盡快確認您的付款。');
+                
+                // 跳轉到訂單追蹤頁面
+                window.location.href = 'order-tracking.html';
+            }, 2000);
+        }
+        
+        // 初始化
+        initOrderInfo();
+    </script>
+</body>
+</html>
