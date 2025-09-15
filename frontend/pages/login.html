@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>代購平台 - 您的海外購物專家</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/shopee-style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- 頂部通知欄 -->
+    <div class="top-banner">
+      <div class="container">
+        <span>🔥 新用戶首單享95折優惠！使用優惠碼：NEW2025</span>
+      </div>
+    </div>
+
+    <!-- 導航欄 -->
+    <nav class="navbar">
+      <div class="container">
+        <div class="nav-wrapper">
+          <div class="logo">
+            <i class="fas fa-shopping-cart"></i>
+            <span>代購平台</span>
+          </div>
+
+          <div class="search-bar">
+            <input type="text" placeholder="搜尋商品..." id="searchInput" />
+            <button class="search-btn"><i class="fas fa-search"></i></button>
+          </div>
+
+          <div class="nav-icons">
+            <div class="nav-item" onclick="showMemberInfo()">
+              <i class="fas fa-user"></i>
+              <span>會員中心</span>
+            </div>
+            <div
+              class="nav-item cart-icon"
+              onclick="window.location.href='cart.html'"
+            >
+              <i class="fas fa-shopping-cart"></i>
+              <span class="cart-badge" id="cartCount">0</span>
+              <span>購物車</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 分類導航 -->
+    <div class="category-nav">
+      <div class="container">
+        <div class="category-list">
+          <div class="category-item active" data-category="all">
+            <i class="fas fa-th-large"></i>
+            <span>全部商品</span>
+          </div>
+          <div class="category-item" data-category="clothing">
+            <i class="fas fa-tshirt"></i>
+            <span>服飾配件</span>
+          </div>
+          <div class="category-item" data-category="electronics">
+            <i class="fas fa-laptop"></i>
+            <span>3C數碼</span>
+          </div>
+          <div class="category-item" data-category="beauty">
+            <i class="fas fa-palette"></i>
+            <span>美妝保養</span>
+          </div>
+          <div class="category-item" data-category="home">
+            <i class="fas fa-home"></i>
+            <span>居家生活</span>
+          </div>
+          <div class="category-item" data-category="food">
+            <i class="fas fa-utensils"></i>
+            <span>美食特產</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 輪播圖 -->
+    <div class="banner-section">
+      <div class="container">
+        <div class="banner-slider">
+          <div class="banner-slide active">
+            <img
+              src="https://via.placeholder.com/1200x400/FF6B35/FFFFFF?text=限時特惠+全場免運費"
+              alt="Banner 1"
+            />
+          </div>
+          <div class="banner-slide">
+            <img
+              src="https://via.placeholder.com/1200x400/4ECDC4/FFFFFF?text=新品上架+搶先購"
+              alt="Banner 2"
+            />
+          </div>
+          <div class="banner-indicators">
+            <span class="indicator active"></span>
+            <span class="indicator"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 匯率資訊 -->
+    <div class="exchange-rate-bar">
+      <div class="container">
+        <div class="rate-info">
+          <i class="fas fa-coins"></i>
+          <span>今日匯率：</span>
+          <span class="rate">人民幣 1 CNY = 4.45 TWD</span>
+          <span class="update-time"
+            >更新時間：<span id="updateTime"></span
+          ></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 商品列表 -->
+    <div class="products-section">
+      <div class="container">
+        <h2 class="section-title">
+          <i class="fas fa-fire"></i>
+          熱門商品
+        </h2>
+
+        <div class="products-grid" id="productsGrid">
+          <!-- 商品卡片示例 -->
+        </div>
+
+        <div class="load-more">
+          <button class="load-more-btn" onclick="loadMoreProducts()">
+            載入更多商品
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 浮動按鈕 -->
+    <div class="floating-buttons">
+      <button class="fab" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+      </button>
+      <button class="fab warehouse-btn" onclick="showWarehouseInfo()">
+        <i class="fas fa-warehouse"></i>
+        <span>倉庫資訊</span>
+      </button>
+    </div>
+
+    <!-- 會員編號彈窗 -->
+    <div class="modal" id="memberModal">
+      <div class="modal-content">
+        <span class="close" onclick="closeMemberModal()">&times;</span>
+        <h2>會員資訊設定</h2>
+        <div class="form-group">
+          <label>您的跑跑虎會員編號：</label>
+          <input
+            type="text"
+            id="memberCode"
+            placeholder="例：935-170-123456"
+            class="form-control"
+          />
+          <small>請輸入您的完整會員編號，格式：935-170-XXXXX</small>
+        </div>
+        <div class="form-group">
+          <label>收件人姓名：</label>
+          <input
+            type="text"
+            id="receiverName"
+            placeholder="請輸入收件人姓名"
+            class="form-control"
+          />
+        </div>
+        <button class="btn btn-primary" onclick="saveMemberInfo()">
+          儲存資訊
+        </button>
+      </div>
+    </div>
+
+    <!-- 倉庫資訊彈窗 -->
+    <div class="modal" id="warehouseModal">
+      <div class="modal-content warehouse-info">
+        <span class="close" onclick="closeWarehouseModal()">&times;</span>
+        <h2>集運倉庫資訊</h2>
+
+        <div class="warehouse-tabs">
+          <button class="tab-btn active" onclick="switchWarehouse('xiamen')">
+            廈門漳州倉
+          </button>
+          <button class="tab-btn" onclick="switchWarehouse('yiwu')">
+            義烏倉
+          </button>
+          <button class="tab-btn" onclick="switchWarehouse('shenzhen')">
+            深圳倉
+          </button>
+        </div>
+
+        <div class="warehouse-detail" id="warehouseDetail">
+          <div class="info-item">
+            <label>倉庫名稱：</label>
+            <span id="warehouseName">廈門漳州倉（海快）</span>
+          </div>
+          <div class="info-item">
+            <label>倉庫地址：</label>
+            <span id="warehouseAddress"
+              >中國-福建省-漳州市-龍海區
+              東園鎮倉里路普洛斯物流園A02庫1樓一分區1號門</span
+            >
+            <button class="copy-btn" onclick="copyAddress()">複製</button>
+          </div>
+          <div class="info-item">
+            <label>收件電話：</label>
+            <span id="warehousePhone">13682536948</span>
+            <button class="copy-btn" onclick="copyPhone()">複製</button>
+          </div>
+          <div class="info-item">
+            <label>收件人格式：</label>
+            <span class="highlight">您的姓名-會員編號</span>
+          </div>
+          <div class="warehouse-features">
+            <span class="feature-tag">免費面單模糊</span>
+            <span class="feature-tag">隱藏機制導入</span>
+            <span class="feature-tag">海運快遞</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/product.js"></script>
+    <script src="../js/member-validator.js"></script>
+    <script src="../js/warehouse-selector.js"></script>
+  </body>
+</html>
