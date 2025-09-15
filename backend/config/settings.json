@@ -1,0 +1,11 @@
+﻿{
+  "platformName": "代購平台",
+  "bankName": "台灣銀行",
+  "bankCode": "004",
+  "bankAccount": "123-456-789012",
+  "accountName": "代購平台有限公司",
+  "serviceFeeRate": 8,
+  "exchangeRate": 4.45,
+  "baseShippingFee": 350,
+  "freeShippingThreshold": 5000
+}

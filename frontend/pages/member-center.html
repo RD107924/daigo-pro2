@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>會員中心 - 代購平台</title>
+    <link rel="stylesheet" href="../css/shopee-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .member-container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .member-content { display: grid; grid-template-columns: 250px 1fr; gap: 20px; }
+        .sidebar { background: white; padding: 20px; border-radius: 8px; height: fit-content; }
+        .sidebar-item { display: block; padding: 12px; color: #333; text-decoration: none; border-radius: 5px; margin-bottom: 5px; }
+        .sidebar-item:hover, .sidebar-item.active { background: #FFF4EC; color: #EE4D2D; }
+        .main-panel { background: white; padding: 30px; border-radius: 8px; }
+        @media (max-width: 768px) {
+            .member-content { grid-template-columns: 1fr; }
+            .sidebar { display: flex; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo" onclick="window.location.href='/'">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>代購平台</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="member-container">
+        <h1>會員中心</h1>
+        <div class="member-content">
+            <div class="sidebar">
+                <a href="#profile" class="sidebar-item active">個人資料</a>
+                <a href="#orders" class="sidebar-item">我的訂單</a>
+                <a href="#addresses" class="sidebar-item">收貨地址</a>
+                <a href="#settings" class="sidebar-item">帳號設定</a>
+            </div>
+            <div class="main-panel">
+                <h2>個人資料</h2>
+                <div class="form-group">
+                    <label>會員編號</label>
+                    <input type="text" class="form-control" id="memberCode" placeholder="935-170-XXXXX">
+                </div>
+                <div class="form-group">
+                    <label>姓名</label>
+                    <input type="text" class="form-control" id="memberName">
+                </div>
+                <div class="form-group">
+                    <label>電話</label>
+                    <input type="tel" class="form-control" id="memberPhone">
+                </div>
+                <button class="btn btn-primary" onclick="saveMemberInfo()">儲存資料</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function saveMemberInfo() {
+            const info = {
+                memberCode: document.getElementById('memberCode').value,
+                memberName: document.getElementById('memberName').value,
+                memberPhone: document.getElementById('memberPhone').value
+            };
+            localStorage.setItem('memberInfo', JSON.stringify(info));
+            alert('資料已儲存');
+        }
+        
+        // 載入已儲存資料
+        const saved = JSON.parse(localStorage.getItem('memberInfo') || '{}');
+        if (saved.memberCode) document.getElementById('memberCode').value = saved.memberCode;
+        if (saved.memberName) document.getElementById('memberName').value = saved.memberName;
+        if (saved.memberPhone) document.getElementById('memberPhone').value = saved.memberPhone;
+    </script>
+</body>
+</html>

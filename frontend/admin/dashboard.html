@@ -6,242 +6,68 @@
     <title>管理後台 - 代購平台</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f6fa;
-        }
-        .admin-container {
-            display: flex;
-            min-height: 100vh;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f6fa; }
+        .admin-container { display: flex; min-height: 100vh; }
         
         /* 側邊欄 */
-        .sidebar {
-            width: 250px;
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #34495e;
-        }
-        .menu-item {
-            display: block;
-            padding: 15px;
-            color: #ecf0f1;
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 5px;
-            transition: background 0.3s;
-        }
-        .menu-item:hover, .menu-item.active {
-            background: #34495e;
-        }
-        .menu-item i {
-            width: 20px;
-            margin-right: 10px;
-        }
+        .sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px; }
+        .logo { font-size: 24px; font-weight: bold; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #34495e; }
+        .menu-item { display: block; padding: 15px; color: #ecf0f1; text-decoration: none; border-radius: 8px; margin-bottom: 5px; transition: background 0.3s; cursor: pointer; }
+        .menu-item:hover, .menu-item.active { background: #34495e; }
+        .menu-item i { width: 20px; margin-right: 10px; }
         
-        /* 主內容區 */
-        .main-content {
-            flex: 1;
-            padding: 20px;
-        }
-        .header {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .content-section {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+        /* 主內容 */
+        .main-content { flex: 1; padding: 20px; }
+        .header { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .content-section { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: none; }
+        .content-section.active { display: block; }
         
         /* 統計卡片 */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border-left: 4px solid #3498db;
-        }
-        .stat-card.success {
-            border-left-color: #2ecc71;
-        }
-        .stat-card.warning {
-            border-left-color: #f39c12;
-        }
-        .stat-card.danger {
-            border-left-color: #e74c3c;
-        }
-        .stat-value {
-            font-size: 32px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        .stat-label {
-            color: #7f8c8d;
-            margin-top: 5px;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 4px solid #3498db; }
+        .stat-value { font-size: 32px; font-weight: bold; color: #2c3e50; }
+        .stat-label { color: #7f8c8d; margin-top: 5px; }
         
-        /* 設定表單 */
-        .settings-form {
-            max-width: 800px;
-        }
-        .form-section {
-            margin-bottom: 30px;
-            padding-bottom: 30px;
-            border-bottom: 1px solid #ecf0f1;
-        }
-        .form-section:last-child {
-            border-bottom: none;
-        }
-        .form-section h3 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-        .form-section h3 i {
-            margin-right: 10px;
-            color: #3498db;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
-        }
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        .form-control:focus {
-            outline: none;
-            border-color: #3498db;
-        }
-        textarea.form-control {
-            resize: vertical;
-            min-height: 100px;
-        }
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        .btn-primary {
-            background: #3498db;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #2980b9;
-        }
-        .btn-success {
-            background: #2ecc71;
-            color: white;
-        }
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-        }
-        .alert {
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+        /* 表單 */
+        .form-section { margin-bottom: 30px; padding-bottom: 30px; border-bottom: 1px solid #ecf0f1; }
+        .form-section:last-child { border-bottom: none; }
+        .form-section h3 { color: #2c3e50; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #555; font-weight: 500; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .form-control:focus { outline: none; border-color: #3498db; }
+        
+        /* 按鈕 */
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; transition: all 0.3s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #2ecc71; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-secondary { background: #95a5a6; color: white; }
         
         /* 表格 */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .data-table th {
-            background: #f8f9fa;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #2c3e50;
-            border-bottom: 2px solid #dee2e6;
-        }
-        .data-table td {
-            padding: 12px;
-            border-bottom: 1px solid #dee2e6;
-        }
-        .data-table tr:hover {
-            background: #f8f9fa;
-        }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th { background: #f8f9fa; padding: 12px; text-align: left; font-weight: 600; color: #2c3e50; border-bottom: 2px solid #dee2e6; }
+        .data-table td { padding: 12px; border-bottom: 1px solid #dee2e6; }
+        .data-table tr:hover { background: #f8f9fa; }
         
         /* 頁籤 */
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ecf0f1;
-        }
-        .tab {
-            padding: 10px 20px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #7f8c8d;
-            font-size: 16px;
-            transition: all 0.3s;
-            position: relative;
-        }
-        .tab.active {
-            color: #3498db;
-        }
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: #3498db;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ecf0f1; }
+        .tab { padding: 10px 20px; background: none; border: none; cursor: pointer; color: #7f8c8d; font-size: 16px; transition: all 0.3s; position: relative; }
+        .tab.active { color: #3498db; }
+        .tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: #3498db; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* 彈窗 */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); animation: fadeIn 0.3s; }
+        .modal-content { background: white; margin: 50px auto; padding: 30px; max-width: 600px; max-height: 80vh; overflow-y: auto; border-radius: 10px; animation: slideIn 0.3s; }
+        .close-modal { float: right; font-size: 28px; font-weight: bold; color: #999; cursor: pointer; }
+        .close-modal:hover { color: #333; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -252,22 +78,22 @@
                 <i class="fas fa-cog"></i> 管理後台
             </div>
             <nav>
-                <a href="#dashboard" class="menu-item active" onclick="showSection('dashboard')">
+                <a class="menu-item active" onclick="showSection('dashboard')">
                     <i class="fas fa-tachometer-alt"></i> 儀表板
                 </a>
-                <a href="#settings" class="menu-item" onclick="showSection('settings')">
-                    <i class="fas fa-cog"></i> 系統設定
-                </a>
-                <a href="#orders" class="menu-item" onclick="showSection('orders')">
-                    <i class="fas fa-shopping-cart"></i> 訂單管理
-                </a>
-                <a href="#products" class="menu-item" onclick="showSection('products')">
+                <a class="menu-item" onclick="showSection('products')">
                     <i class="fas fa-box"></i> 商品管理
                 </a>
-                <a href="#warehouses" class="menu-item" onclick="showSection('warehouses')">
+                <a class="menu-item" onclick="showSection('orders')">
+                    <i class="fas fa-shopping-cart"></i> 訂單管理
+                </a>
+                <a class="menu-item" onclick="showSection('settings')">
+                    <i class="fas fa-cog"></i> 系統設定
+                </a>
+                <a class="menu-item" onclick="showSection('warehouses')">
                     <i class="fas fa-warehouse"></i> 倉庫設定
                 </a>
-                <a href="#" class="menu-item" onclick="logout()">
+                <a class="menu-item" onclick="doLogout()">
                     <i class="fas fa-sign-out-alt"></i> 登出
                 </a>
             </nav>
@@ -284,24 +110,24 @@
             </div>
             
             <!-- 儀表板 -->
-            <div id="dashboard-section" class="content-section">
+            <div id="dashboard-section" class="content-section active">
                 <h2>儀表板總覽</h2>
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-value">156</div>
+                        <div class="stat-value" id="totalProducts">0</div>
+                        <div class="stat-label">商品總數</div>
+                    </div>
+                    <div class="stat-card" style="border-left-color: #2ecc71;">
+                        <div class="stat-value" id="totalOrders">0</div>
                         <div class="stat-label">總訂單數</div>
                     </div>
-                    <div class="stat-card success">
-                        <div class="stat-value">12</div>
+                    <div class="stat-card" style="border-left-color: #f39c12;">
+                        <div class="stat-value" id="pendingOrders">0</div>
                         <div class="stat-label">待處理訂單</div>
                     </div>
-                    <div class="stat-card warning">
-                        <div class="stat-value">NT$ 458,230</div>
+                    <div class="stat-card" style="border-left-color: #e74c3c;">
+                        <div class="stat-value" id="totalRevenue">NT$ 0</div>
                         <div class="stat-label">本月營收</div>
-                    </div>
-                    <div class="stat-card danger">
-                        <div class="stat-value">89</div>
-                        <div class="stat-label">商品總數</div>
                     </div>
                 </div>
                 
@@ -317,154 +143,36 @@
                         </tr>
                     </thead>
                     <tbody id="recentOrders">
-                        <tr>
-                            <td>ORD20250115001</td>
-                            <td>張小明</td>
-                            <td>NT$ 5,680</td>
-                            <td><span style="color: #f39c12;">待確認</span></td>
-                            <td><button class="btn btn-primary">查看</button></td>
-                        </tr>
+                        <tr><td colspan="5" style="text-align: center;">暫無訂單</td></tr>
                     </tbody>
                 </table>
             </div>
             
-            <!-- 系統設定 -->
-            <div id="settings-section" class="content-section" style="display: none;">
-                <h2>系統設定</h2>
-                
-                <div class="tabs">
-                    <button class="tab active" onclick="showTab('basic')">基本設定</button>
-                    <button class="tab" onclick="showTab('payment')">付款設定</button>
-                    <button class="tab" onclick="showTab('email')">郵件設定</button>
-                    <button class="tab" onclick="showTab('shipping')">運費設定</button>
-                </div>
-                
-                <div class="settings-form">
-                    <!-- 基本設定 -->
-                    <div id="basic-tab" class="tab-content active">
-                        <div class="form-section">
-                            <h3><i class="fas fa-store"></i> 平台資訊</h3>
-                            <div class="form-group">
-                                <label>平台名稱</label>
-                                <input type="text" class="form-control" id="platformName" value="代購平台">
-                            </div>
-                            <div class="form-group">
-                                <label>平台標語</label>
-                                <input type="text" class="form-control" id="platformSlogan" value="您的海外購物專家">
-                            </div>
-                            <div class="form-group">
-                                <label>客服電話</label>
-                                <input type="text" class="form-control" id="servicePhone" value="0800-123-456">
-                            </div>
-                            <div class="form-group">
-                                <label>客服信箱</label>
-                                <input type="email" class="form-control" id="serviceEmail" value="service@daigou.com">
-                            </div>
-                        </div>
-                        
-                        <div class="form-section">
-                            <h3><i class="fas fa-percentage"></i> 費用設定</h3>
-                            <div class="form-group">
-                                <label>代購服務費率 (%)</label>
-                                <input type="number" class="form-control" id="serviceFeeRate" value="8" min="0" max="100" step="0.1">
-                            </div>
-                            <div class="form-group">
-                                <label>匯率 (1 CNY = ? TWD)</label>
-                                <input type="number" class="form-control" id="exchangeRate" value="4.45" step="0.01">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 付款設定 -->
-                    <div id="payment-tab" class="tab-content">
-                        <div class="form-section">
-                            <h3><i class="fas fa-university"></i> 銀行帳戶資訊</h3>
-                            <div class="form-group">
-                                <label>銀行名稱</label>
-                                <input type="text" class="form-control" id="bankName" value="台灣銀行">
-                            </div>
-                            <div class="form-group">
-                                <label>銀行代碼</label>
-                                <input type="text" class="form-control" id="bankCode" value="004">
-                            </div>
-                            <div class="form-group">
-                                <label>帳號</label>
-                                <input type="text" class="form-control" id="bankAccount" value="123-456-789012">
-                            </div>
-                            <div class="form-group">
-                                <label>戶名</label>
-                                <input type="text" class="form-control" id="accountName" value="代購平台有限公司">
-                            </div>
-                        </div>
-                        
-                        <div class="form-section">
-                            <h3><i class="fas fa-credit-card"></i> 其他付款方式</h3>
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="enableCreditCard"> 啟用信用卡付款
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="enableLinePay"> 啟用 LINE Pay
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 郵件設定 -->
-                    <div id="email-tab" class="tab-content">
-                        <div class="form-section">
-                            <h3><i class="fas fa-envelope"></i> 郵件通知設定</h3>
-                            <div class="form-group">
-                                <label>管理員信箱</label>
-                                <input type="email" class="form-control" id="adminEmail" value="randyhuang1007@gmail.com">
-                            </div>
-                            <div class="form-group">
-                                <label>寄件人信箱</label>
-                                <input type="email" class="form-control" id="senderEmail" value="rruntiger@gmail.com">
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="notifyNewOrder" checked> 新訂單通知
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" id="notifyPayment" checked> 付款確認通知
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 運費設定 -->
-                    <div id="shipping-tab" class="tab-content">
-                        <div class="form-section">
-                            <h3><i class="fas fa-truck"></i> 運費設定</h3>
-                            <div class="form-group">
-                                <label>基本運費 (NT$)</label>
-                                <input type="number" class="form-control" id="baseShippingFee" value="350">
-                            </div>
-                            <div class="form-group">
-                                <label>免運費門檻 (NT$)</label>
-                                <input type="number" class="form-control" id="freeShippingThreshold" value="5000">
-                                <small style="color: #666;">設為 0 表示不提供免運</small>
-                            </div>
-                            <div class="form-group">
-                                <label>空運加價 (NT$)</label>
-                                <input type="number" class="form-control" id="airShippingExtra" value="200">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-primary" onclick="saveSettings()">
-                        <i class="fas fa-save"></i> 儲存設定
-                    </button>
-                </div>
+            <!-- 商品管理 -->
+            <div id="products-section" class="content-section">
+                <h2>商品管理</h2>
+                <button class="btn btn-primary" onclick="openAddProduct()">
+                    <i class="fas fa-plus"></i> 新增商品
+                </button>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>商品名稱</th>
+                            <th>價格</th>
+                            <th>原價</th>
+                            <th>庫存</th>
+                            <th>分類</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTable">
+                        <tr><td colspan="6" style="text-align: center;">載入中...</td></tr>
+                    </tbody>
+                </table>
             </div>
             
             <!-- 訂單管理 -->
-            <div id="orders-section" class="content-section" style="display: none;">
+            <div id="orders-section" class="content-section">
                 <h2>訂單管理</h2>
                 <table class="data-table">
                     <thead>
@@ -478,53 +186,97 @@
                         </tr>
                     </thead>
                     <tbody id="ordersTable">
-                        <!-- 訂單將動態載入 -->
+                        <tr><td colspan="6" style="text-align: center;">暫無訂單</td></tr>
                     </tbody>
                 </table>
             </div>
             
-            <!-- 商品管理 -->
-            <div id="products-section" class="content-section" style="display: none;">
-                <h2>商品管理</h2>
-                <button class="btn btn-primary" style="margin-bottom: 20px;" onclick="addProduct()">
-                    <i class="fas fa-plus"></i> 新增商品
+            <!-- 系統設定 -->
+            <div id="settings-section" class="content-section">
+                <h2>系統設定</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('basic')">基本設定</button>
+                    <button class="tab" onclick="showTab('payment')">付款設定</button>
+                    <button class="tab" onclick="showTab('shipping')">運費設定</button>
+                </div>
+                
+                <!-- 基本設定 -->
+                <div id="basic-tab" class="tab-content active">
+                    <div class="form-section">
+                        <h3><i class="fas fa-store"></i> 平台資訊</h3>
+                        <div class="form-group">
+                            <label>平台名稱</label>
+                            <input type="text" class="form-control" id="platformName" value="代購平台">
+                        </div>
+                        <div class="form-group">
+                            <label>客服電話</label>
+                            <input type="text" class="form-control" id="servicePhone" value="0800-123-456">
+                        </div>
+                        <div class="form-group">
+                            <label>服務費率 (%)</label>
+                            <input type="number" class="form-control" id="serviceFeeRate" value="8" min="0" max="100">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 付款設定 -->
+                <div id="payment-tab" class="tab-content">
+                    <div class="form-section">
+                        <h3><i class="fas fa-university"></i> 銀行帳戶資訊</h3>
+                        <div class="form-group">
+                            <label>銀行名稱</label>
+                            <input type="text" class="form-control" id="bankName" value="台灣銀行">
+                        </div>
+                        <div class="form-group">
+                            <label>銀行代碼</label>
+                            <input type="text" class="form-control" id="bankCode" value="004">
+                        </div>
+                        <div class="form-group">
+                            <label>帳號</label>
+                            <input type="text" class="form-control" id="bankAccount" value="123-456-789012">
+                        </div>
+                        <div class="form-group">
+                            <label>戶名</label>
+                            <input type="text" class="form-control" id="accountName" value="代購平台有限公司">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 運費設定 -->
+                <div id="shipping-tab" class="tab-content">
+                    <div class="form-section">
+                        <h3><i class="fas fa-truck"></i> 運費設定</h3>
+                        <div class="form-group">
+                            <label>基本運費 (NT$)</label>
+                            <input type="number" class="form-control" id="baseShippingFee" value="350">
+                        </div>
+                        <div class="form-group">
+                            <label>免運費門檻 (NT$)</label>
+                            <input type="number" class="form-control" id="freeShippingThreshold" value="5000">
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="saveSettings()">
+                    <i class="fas fa-save"></i> 儲存設定
                 </button>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>商品名稱</th>
-                            <th>價格</th>
-                            <th>庫存</th>
-                            <th>分類</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productsTable">
-                        <!-- 商品將動態載入 -->
-                    </tbody>
-                </table>
             </div>
             
             <!-- 倉庫設定 -->
-            <div id="warehouses-section" class="content-section" style="display: none;">
+            <div id="warehouses-section" class="content-section">
                 <h2>倉庫設定</h2>
                 <div class="form-section">
                     <h3><i class="fas fa-warehouse"></i> 廈門漳州倉</h3>
                     <div class="form-group">
                         <label>倉庫地址</label>
-                        <textarea class="form-control" id="xiamenAddress">中國-福建省-漳州市-龍海區 東園鎮倉里路普洛斯物流園A02庫1樓一分區1號門</textarea>
+                        <textarea class="form-control" id="xiamenAddress" rows="3">中國-福建省-漳州市-龍海區 東園鎮倉里路普洛斯物流園A02庫1樓一分區1號門</textarea>
                     </div>
                     <div class="form-group">
                         <label>聯絡電話</label>
                         <input type="text" class="form-control" id="xiamenPhone" value="13682536948">
                     </div>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="xiamenEnabled" checked> 啟用此倉庫
-                        </label>
-                    </div>
                 </div>
-                
                 <button class="btn btn-primary" onclick="saveWarehouseSettings()">
                     <i class="fas fa-save"></i> 儲存倉庫設定
                 </button>
@@ -532,179 +284,422 @@
         </div>
     </div>
     
+        <!-- 商品彈窗 -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeProductModal()">&times;</span>
+            <h2 id="modalTitle">新增商品</h2>
+            <div class="form-group">
+                <label>商品名稱 *</label>
+                <input type="text" class="form-control" id="productName">
+            </div>
+            <div class="form-group">
+                <label>價格 *</label>
+                <input type="number" class="form-control" id="productPrice">
+            </div>
+            <div class="form-group">
+                <label>原價</label>
+                <input type="number" class="form-control" id="productOriginalPrice">
+            </div>
+            <div class="form-group">
+                <label>商品圖片網址</label>
+                <input type="text" class="form-control" id="productImage" placeholder="輸入圖片網址 (例如: https://i.imgur.com/xxxxx.jpg)" onchange="previewImage()">
+                <small style="color: #666;">支援 imgur, imgbb, cloudinary 等圖床，或任何圖片直連網址</small>
+                <div id="imagePreview" style="margin-top: 10px; display: none;">
+                    <img id="previewImg" style="max-width: 200px; border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>分類</label>
+                <select class="form-control" id="productCategory">
+                    <option value="beauty">美妝保養</option>
+                    <option value="clothing">服飾配件</option>
+                    <option value="electronics">3C數碼</option>
+                    <option value="home">居家生活</option>
+                    <option value="food">美食特產</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>來源國家</label>
+                <input type="text" class="form-control" id="productSource" placeholder="例：日本">
+            </div>
+            <div class="form-group">
+                <label>庫存數量</label>
+                <input type="number" class="form-control" id="productStock" value="100">
+            </div>
+            <button class="btn btn-primary" onclick="saveProductWithImage()">儲存</button>
+            <button class="btn btn-secondary" onclick="closeProductModal()" style="margin-left: 10px;">取消</button>
+        </div>
+    </div>
+            <div class="form-group">
+                <label>原價</label>
+                <input type="number" class="form-control" id="productOriginalPrice">
+            </div>
+            <div class="form-group">
+                <label>分類</label>
+                <select class="form-control" id="productCategory">
+                    <option value="beauty">美妝保養</option>
+                    <option value="clothing">服飾配件</option>
+                    <option value="electronics">3C數碼</option>
+                    <option value="home">居家生活</option>
+                    <option value="food">美食特產</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>來源國家</label>
+                <input type="text" class="form-control" id="productSource" placeholder="例：日本">
+            </div>
+            <div class="form-group">
+                <label>庫存數量</label>
+                <input type="number" class="form-control" id="productStock" value="100">
+            </div>
+            <button class="btn btn-primary" onclick="saveProductWithImage()">儲存</button>
+            <button class="btn btn-secondary" onclick="closeProductModal()" style="margin-left: 10px;">取消</button>
+        </div>
+    </div>
+
     <script>
-        // 檢查登入狀態
+    // === 全域變數 ===
+    let editingProductId = null;
+
+    // === 初始化 ===
+    document.addEventListener('DOMContentLoaded', function() {
         if (!sessionStorage.getItem('adminLoggedIn')) {
-            window.location.href = 'login.html';
+            window.location.href = '/admin/login';
         }
-        
-        // 載入設定
-        function loadSettings() {
-            const settings = JSON.parse(localStorage.getItem('platformSettings')) || {};
-            
-            // 載入基本設定
-            if (settings.platformName) document.getElementById('platformName').value = settings.platformName;
-            if (settings.platformSlogan) document.getElementById('platformSlogan').value = settings.platformSlogan;
-            if (settings.servicePhone) document.getElementById('servicePhone').value = settings.servicePhone;
-            if (settings.serviceEmail) document.getElementById('serviceEmail').value = settings.serviceEmail;
-            if (settings.serviceFeeRate) document.getElementById('serviceFeeRate').value = settings.serviceFeeRate;
-            if (settings.exchangeRate) document.getElementById('exchangeRate').value = settings.exchangeRate;
-            
-            // 載入付款設定
-            if (settings.bankName) document.getElementById('bankName').value = settings.bankName;
-            if (settings.bankCode) document.getElementById('bankCode').value = settings.bankCode;
-            if (settings.bankAccount) document.getElementById('bankAccount').value = settings.bankAccount;
-            if (settings.accountName) document.getElementById('accountName').value = settings.accountName;
-            
-            // 載入郵件設定
-            if (settings.adminEmail) document.getElementById('adminEmail').value = settings.adminEmail;
-            if (settings.senderEmail) document.getElementById('senderEmail').value = settings.senderEmail;
-            
-            // 載入運費設定
-            if (settings.baseShippingFee) document.getElementById('baseShippingFee').value = settings.baseShippingFee;
-            if (settings.freeShippingThreshold) document.getElementById('freeShippingThreshold').value = settings.freeShippingThreshold;
-            if (settings.airShippingExtra) document.getElementById('airShippingExtra').value = settings.airShippingExtra;
-        }
-        
-        // 儲存設定
-        function saveSettings() {
-            const settings = {
-                // 基本設定
-                platformName: document.getElementById('platformName').value,
-                platformSlogan: document.getElementById('platformSlogan').value,
-                servicePhone: document.getElementById('servicePhone').value,
-                serviceEmail: document.getElementById('serviceEmail').value,
-                serviceFeeRate: document.getElementById('serviceFeeRate').value,
-                exchangeRate: document.getElementById('exchangeRate').value,
-                
-                // 付款設定
-                bankName: document.getElementById('bankName').value,
-                bankCode: document.getElementById('bankCode').value,
-                bankAccount: document.getElementById('bankAccount').value,
-                accountName: document.getElementById('accountName').value,
-                
-                // 郵件設定
-                adminEmail: document.getElementById('adminEmail').value,
-                senderEmail: document.getElementById('senderEmail').value,
-                notifyNewOrder: document.getElementById('notifyNewOrder').checked,
-                notifyPayment: document.getElementById('notifyPayment').checked,
-                
-                // 運費設定
-                baseShippingFee: document.getElementById('baseShippingFee').value,
-                freeShippingThreshold: document.getElementById('freeShippingThreshold').value,
-                airShippingExtra: document.getElementById('airShippingExtra').value,
-                
-                // 更新時間
-                lastUpdated: new Date().toISOString()
-            };
-            
-            localStorage.setItem('platformSettings', JSON.stringify(settings));
-            
-            // 顯示成功訊息
-            alert('設定已儲存成功！');
-            
-            // 如果需要，可以發送到後端
-            // fetch('/api/admin/settings', {
-            //     method: 'POST',
-            //     headers: {'Content-Type': 'application/json'},
-            //     body: JSON.stringify(settings)
-            // });
-        }
-        
-        // 顯示區塊
-        function showSection(section) {
-            // 隱藏所有區塊
-            document.querySelectorAll('.content-section').forEach(s => {
-                s.style.display = 'none';
-            });
-            
-            // 顯示選中的區塊
-            document.getElementById(section + '-section').style.display = 'block';
-            
-            // 更新選單狀態
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // 載入對應資料
-            if (section === 'orders') {
-                loadOrders();
-            } else if (section === 'products') {
-                loadProducts();
-            }
-        }
-        
-        // 顯示頁籤
-        function showTab(tab) {
-            // 隱藏所有頁籤
-            document.querySelectorAll('.tab-content').forEach(t => {
-                t.classList.remove('active');
-            });
-            document.querySelectorAll('.tab').forEach(t => {
-                t.classList.remove('active');
-            });
-            
-            // 顯示選中的頁籤
-            document.getElementById(tab + '-tab').classList.add('active');
-            event.target.classList.add('active');
-        }
-        
-        // 載入訂單
-        function loadOrders() {
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
-            const tbody = document.getElementById('ordersTable');
-            
-            if (orders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">暫無訂單</td></tr>';
-                return;
-            }
-            
-            tbody.innerHTML = orders.map(order => `
-                <tr>
-                    <td>${order.orderId || '-'}</td>
-                    <td>${order.receiverName || '-'}<br>${order.memberCode || '-'}</td>
-                    <td>NT$ ${(order.totalAmount || 0).toLocaleString()}</td>
-                    <td>${getStatusBadge(order.status)}</td>
-                    <td>${new Date(order.createdAt).toLocaleString('zh-TW')}</td>
-                    <td>
-                        <button class="btn btn-primary" onclick="viewOrder('${order.orderId}')">查看</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-        
-        // 取得狀態標籤
-        function getStatusBadge(status) {
-            const statusMap = {
-                'pending_payment': '<span style="color: #f39c12;">待付款</span>',
-                'payment_uploaded': '<span style="color: #3498db;">待確認</span>',
-                'paid': '<span style="color: #2ecc71;">已付款</span>',
-                'processing': '<span style="color: #9b59b6;">處理中</span>',
-                'shipped': '<span style="color: #1abc9c;">已發貨</span>',
-                'completed': '<span style="color: #27ae60;">已完成</span>'
-            };
-            return statusMap[status] || '<span>未知</span>';
-        }
-        
-        // 登出
-        function logout() {
-            if (confirm('確定要登出嗎？')) {
-                sessionStorage.removeItem('adminLoggedIn');
-                window.location.href = 'login.html';
-            }
-        }
-        
-        // 更新時間
-        function updateTime() {
-            document.getElementById('currentTime').textContent = 
-                new Date().toLocaleString('zh-TW');
-        }
-        
-        // 初始化
-        loadSettings();
         updateTime();
         setInterval(updateTime, 1000);
+        updateDashboard();
+    });
+
+    // === 頁面切換 ===
+    function showSection(section) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+        
+        document.getElementById(section + '-section').classList.add('active');
+        event.target.classList.add('active');
+        
+        if (section === 'products') loadProducts();
+        if (section === 'orders') loadOrders();
+        if (section === 'dashboard') updateDashboard();
+    }
+
+    function showTab(tab) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        event.target.classList.add('active');
+        document.getElementById(tab + '-tab').classList.add('active');
+    }
+
+    // === 儀表板 ===
+    function updateDashboard() {
+        const products = JSON.parse(localStorage.getItem('products') || '[]');
+        const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+        
+        document.getElementById('totalProducts').textContent = products.length;
+        document.getElementById('totalOrders').textContent = orders.length;
+        document.getElementById('pendingOrders').textContent = orders.filter(o => o.status === 'pending').length;
+        
+        const revenue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+        document.getElementById('totalRevenue').textContent = 'NT$ ' + revenue.toLocaleString();
+        
+        // 載入最新訂單
+        const recentOrdersHTML = orders.slice(0, 5).map(order => 
+            '<tr>' +
+            '<td>' + (order.orderId || '-') + '</td>' +
+            '<td>' + (order.receiverName || '-') + '</td>' +
+            '<td>NT$ ' + (order.totalAmount || 0).toLocaleString() + '</td>' +
+            '<td>' + getStatusText(order.status) + '</td>' +
+            '<td><button class="btn btn-primary btn-sm">查看</button></td>' +
+            '</tr>'
+        ).join('') || '<tr><td colspan="5" style="text-align: center;">暫無訂單</td></tr>';
+        
+        document.getElementById('recentOrders').innerHTML = recentOrdersHTML;
+    }
+
+    // === 商品管理 ===
+    function openAddProduct() {
+        editingProductId = null;
+        document.getElementById('modalTitle').textContent = '新增商品';
+        document.getElementById('productModal').style.display = 'block';
+        clearProductForm();
+    }
+
+    function closeProductModal() {
+        document.getElementById('productModal').style.display = 'none';
+        clearProductForm();
+    }
+
+    function clearProductForm() {
+        document.getElementById('productName').value = '';
+        document.getElementById('productPrice').value = '';
+        document.getElementById('productOriginalPrice').value = '';
+        document.getElementById('productCategory').value = 'beauty';
+        document.getElementById('productSource').value = '';
+        document.getElementById('productStock').value = '100';
+    }
+
+    function saveProduct() {
+        const name = document.getElementById('productName').value.trim();
+        const price = document.getElementById('productPrice').value;
+        
+        if (!name || !price) {
+            alert('請填寫商品名稱和價格');
+            return;
+        }
+        
+        let products = JSON.parse(localStorage.getItem('products') || '[]');
+        
+        const productData = {
+            title: name,
+            price: parseInt(price),
+            originalPrice: parseInt(document.getElementById('productOriginalPrice').value) || null,
+            category: document.getElementById('productCategory').value,
+            source: document.getElementById('productSource').value || '未知',
+            stock: parseInt(document.getElementById('productStock').value) || 100,
+            image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300"%3E%3Crect fill="%23' + 
+                   Math.floor(Math.random()*16777215).toString(16) + 
+                   '" width="300" height="300"/%3E%3Ctext x="50%25" y="50%25" fill="white" text-anchor="middle" font-size="20"%3E' + 
+                   encodeURIComponent(name) + '%3C/text%3E%3C/svg%3E'
+        };
+        
+        if (editingProductId) {
+            const index = products.findIndex(p => p.id === editingProductId);
+            if (index !== -1) {
+                products[index] = { ...products[index], ...productData };
+            }
+        } else {
+            productData.id = Date.now();
+            productData.createdAt = new Date().toISOString();
+            products.push(productData);
+        }
+        
+        localStorage.setItem('products', JSON.stringify(products));
+        alert(editingProductId ? '商品已更新' : '商品已新增');
+        closeProductModal();
+        loadProducts();
+    }
+
+    function loadProducts() {
+        const products = JSON.parse(localStorage.getItem('products') || '[]');
+        const tbody = document.getElementById('productsTable');
+        
+        if (products.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">暫無商品</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = products.map(product => 
+            '<tr>' +
+            '<td>' + product.title + '</td>' +
+            '<td>NT$ ' + product.price.toLocaleString() + '</td>' +
+            '<td>' + (product.originalPrice ? 'NT$ ' + product.originalPrice.toLocaleString() : '-') + '</td>' +
+            '<td>' + (product.stock || 0) + '</td>' +
+            '<td>' + getCategoryName(product.category) + '</td>' +
+            '<td>' +
+                '<button class="btn btn-primary btn-sm" onclick="editProduct(' + product.id + ')">編輯</button> ' +
+                '<button class="btn btn-danger btn-sm" onclick="deleteProduct(' + product.id + ')">刪除</button>' +
+            '</td>' +
+            '</tr>'
+        ).join('');
+    }
+
+    function editProduct(id) {
+        const products = JSON.parse(localStorage.getItem('products') || '[]');
+        const product = products.find(p => p.id === id);
+        
+        if (product) {
+            editingProductId = id;
+            document.getElementById('modalTitle').textContent = '編輯商品';
+            document.getElementById('productName').value = product.title;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productOriginalPrice').value = product.originalPrice || '';
+            document.getElementById('productCategory').value = product.category;
+            document.getElementById('productSource').value = product.source || '';
+            document.getElementById('productStock').value = product.stock || 100;
+            document.getElementById('productModal').style.display = 'block';
+        }
+    }
+
+    function deleteProduct(id) {
+        if (confirm('確定要刪除此商品嗎？')) {
+            let products = JSON.parse(localStorage.getItem('products') || '[]');
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem('products', JSON.stringify(products));
+            loadProducts();
+        }
+    }
+
+    // === 訂單管理 ===
+    function loadOrders() {
+        const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+        const tbody = document.getElementById('ordersTable');
+        
+        if (orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">暫無訂單</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = orders.map(order => 
+            '<tr>' +
+            '<td>' + (order.orderId || '-') + '</td>' +
+            '<td>' + (order.receiverName || '-') + '<br>' + (order.memberCode || '-') + '</td>' +
+            '<td>NT$ ' + (order.totalAmount || 0).toLocaleString() + '</td>' +
+            '<td>' + getStatusText(order.status) + '</td>' +
+            '<td>' + new Date(order.createdAt).toLocaleString('zh-TW') + '</td>' +
+            '<td><button class="btn btn-primary btn-sm">查看</button></td>' +
+            '</tr>'
+        ).join('');
+    }
+
+    // === 設定管理 ===
+    function saveSettings() {
+        const settings = {
+            platformName: document.getElementById('platformName').value,
+            servicePhone: document.getElementById('servicePhone').value,
+            serviceFeeRate: document.getElementById('serviceFeeRate').value,
+            bankName: document.getElementById('bankName').value,
+            bankCode: document.getElementById('bankCode').value,
+            bankAccount: document.getElementById('bankAccount').value,
+            accountName: document.getElementById('accountName').value,
+            baseShippingFee: document.getElementById('baseShippingFee').value,
+            freeShippingThreshold: document.getElementById('freeShippingThreshold').value
+        };
+        
+        localStorage.setItem('platformSettings', JSON.stringify(settings));
+        alert('設定已儲存成功！');
+    }
+
+    function saveWarehouseSettings() {
+        const warehouseSettings = {
+            xiamenAddress: document.getElementById('xiamenAddress').value,
+            xiamenPhone: document.getElementById('xiamenPhone').value
+        };
+        
+        localStorage.setItem('warehouseSettings', JSON.stringify(warehouseSettings));
+        alert('倉庫設定已儲存！');
+    }
+
+    // === 輔助函數 ===
+    function getCategoryName(category) {
+        const categories = {
+            'beauty': '美妝保養',
+            'clothing': '服飾配件',
+            'electronics': '3C數碼',
+            'home': '居家生活',
+            'food': '美食特產'
+        };
+        return categories[category] || category;
+    }
+
+    function getStatusText(status) {
+        const statusMap = {
+            'pending': '待處理',
+            'pending_payment': '待付款',
+            'paid': '已付款',
+            'processing': '處理中',
+            'shipped': '已發貨',
+            'completed': '已完成'
+        };
+        return statusMap[status] || status;
+    }
+
+    function updateTime() {
+        document.getElementById('currentTime').textContent = new Date().toLocaleString('zh-TW');
+    }
+
+    function doLogout() {
+        if (confirm('確定要登出嗎？')) {
+            sessionStorage.removeItem('adminLoggedIn');
+            window.location.href = '/admin/login';
+        }
+    }
+
+    // 關閉彈窗（點擊外部）
+    window.onclick = function(event) {
+        if (event.target.className === 'modal') {
+            event.target.style.display = 'none';
+        }
+    }
+    
+    // 圖片預覽功能
+    function previewImage() {
+        const url = document.getElementById('productImage').value.trim();
+        const preview = document.getElementById('imagePreview');
+        const img = document.getElementById('previewImg');
+        
+        if (url) {
+            img.src = url;
+            img.onload = function() {
+                preview.style.display = 'block';
+            };
+            img.onerror = function() {
+                preview.style.display = 'none';
+                alert('無法載入圖片，請檢查網址是否正確');
+            };
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+
+    // 更新 clearProductForm 函數
+    function clearProductForm() {
+        document.getElementById('productName').value = '';
+        document.getElementById('productPrice').value = '';
+        document.getElementById('productOriginalPrice').value = '';
+        document.getElementById('productCategory').value = 'beauty';
+        document.getElementById('productSource').value = '';
+        document.getElementById('productStock').value = '100';
+        document.getElementById('productImage').value = '';
+        document.getElementById('imagePreview').style.display = 'none';
+    }
+
+    // 更新 saveProduct 函數以處理圖片
+    function saveProductWithImage() {
+        const name = document.getElementById('productName').value.trim();
+        const price = document.getElementById('productPrice').value;
+        const imageUrl = document.getElementById('productImage').value.trim();
+        
+        if (!name || !price) {
+            alert('請填寫商品名稱和價格');
+            return;
+        }
+        
+        let products = JSON.parse(localStorage.getItem('products') || '[]');
+        
+        // 處理圖片
+        let finalImage = imageUrl || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300"%3E%3Crect fill="%234CAF50" width="300" height="300"/%3E%3Ctext x="50%25" y="50%25" fill="white" text-anchor="middle" font-size="20"%3E' + encodeURIComponent(name) + '%3C/text%3E%3C/svg%3E';
+        
+        const productData = {
+            id: editingProductId || Date.now(),
+            title: name,
+            price: parseInt(price),
+            originalPrice: parseInt(document.getElementById('productOriginalPrice').value) || null,
+            category: document.getElementById('productCategory').value,
+            source: document.getElementById('productSource').value || '未知',
+            stock: parseInt(document.getElementById('productStock').value) || 100,
+            image: finalImage,
+            createdAt: new Date().toISOString()
+        };
+        
+        if (editingProductId) {
+            const index = products.findIndex(p => p.id === editingProductId);
+            if (index !== -1) {
+                products[index] = productData;
+            }
+        } else {
+            products.push(productData);
+        }
+        
+        localStorage.setItem('products', JSON.stringify(products));
+        alert(editingProductId ? '商品已更新' : '商品已新增');
+        closeProductModal();
+        loadProducts();
+    }
     </script>
 </body>
 </html>
+
+

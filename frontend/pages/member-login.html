@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>會員登入 - 代購平台</title>
-    <link rel="stylesheet" href="../css/shopee-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -22,14 +23,10 @@
             width: 100%;
             max-width: 400px;
         }
-        .login-header {
+        h2 {
             text-align: center;
+            color: #333;
             margin-bottom: 30px;
-        }
-        .logo {
-            color: #EE4D2D;
-            font-size: 32px;
-            margin-bottom: 10px;
         }
         .form-group {
             margin-bottom: 20px;
@@ -47,7 +44,7 @@
             border-radius: 8px;
             font-size: 14px;
         }
-        .btn-login {
+        .btn {
             width: 100%;
             padding: 12px;
             background: #EE4D2D;
@@ -56,17 +53,17 @@
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 20px;
         }
-        .btn-login:hover {
+        .btn:hover {
             background: #D73211;
         }
-        .links {
+        .link-row {
             text-align: center;
             margin-top: 20px;
         }
-        .links a {
-            color: #EE4D2D;
+        .link-row a {
+            color: #667eea;
             text-decoration: none;
             margin: 0 10px;
         }
@@ -74,36 +71,48 @@
 </head>
 <body>
     <div class="login-container">
-        <div class="login-header">
-            <div class="logo">
-                <i class="fas fa-shopping-cart"></i>
-            </div>
-            <h2>會員登入</h2>
-        </div>
+        <h2><i class="fas fa-user-circle"></i> 會員登入</h2>
         <form id="loginForm">
             <div class="form-group">
-                <label>電子郵件</label>
-                <input type="email" id="email" required>
+                <label>會員編號</label>
+                <input type="text" id="memberCode" placeholder="935-170-XXXXX" required>
             </div>
             <div class="form-group">
-                <label>密碼</label>
-                <input type="password" id="password" required>
+                <label>姓名</label>
+                <input type="text" id="memberName" placeholder="請輸入您的姓名" required>
             </div>
-            <button type="submit" class="btn-login">登入</button>
+            <button type="submit" class="btn">登入</button>
         </form>
-        <div class="links">
-            <a href="/register">註冊新帳號</a>
-            <a href="/">返回首頁</a>
+        <div class="link-row">
+            <a href="/">訪客瀏覽</a>
+            <a href="/register">註冊新會員</a>
         </div>
     </div>
+    
     <script>
-        document.getElementById("loginForm").addEventListener("submit", function(e) {
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            localStorage.setItem("userLoggedIn", "true");
-            alert("登入成功！");
-            window.location.href = "/";
+            
+            const memberCode = document.getElementById('memberCode').value;
+            const memberName = document.getElementById('memberName').value;
+            
+            // 驗證會員編號格式
+            if (!memberCode.match(/^935-170-\d+$/)) {
+                alert('請輸入正確的會員編號格式');
+                return;
+            }
+            
+            // 儲存會員資訊
+            const memberInfo = {
+                memberCode: memberCode,
+                memberName: memberName,
+                loginTime: new Date().toISOString()
+            };
+            
+            localStorage.setItem('memberInfo', JSON.stringify(memberInfo));
+            alert('登入成功！');
+            window.location.href = '/';
         });
     </script>
 </body>
 </html>
-
