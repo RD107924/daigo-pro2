@@ -1,0 +1,328 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>結帳 - 代購平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .checkout-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #EE4D2D;
+        }
+        .warehouse-info {
+            background: #FFF4EC;
+            border: 1px solid #FFD4A3;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .warehouse-info h3 {
+            color: #EE4D2D;
+            margin-bottom: 15px;
+        }
+        .order-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .total-row {
+            font-size: 18px;
+            font-weight: bold;
+            color: #EE4D2D;
+            border-top: 2px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #EE4D2D;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #D73211;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            margin-right: 10px;
+        }
+        .payment-methods {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .payment-option {
+            border: 2px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .payment-option:hover,
+        .payment-option.selected {
+            border-color: #EE4D2D;
+            background: #FFF4EC;
+        }
+        .required {
+            color: red;
+        }
+    </style>
+    <script src="../js/settings-sync.js"></script>
+</head>
+<body>
+    <div class="checkout-container">
+        <h1><i class="fas fa-shopping-cart"></i> 確認訂單</h1>
+        
+        <form id="checkoutForm">
+            <!-- 會員資訊 -->
+            <div class="form-group">
+                <label>跑跑虎會員編號 <span class="required">*</span></label>
+                <input type="text" id="memberCode" placeholder="例：935-170-123456" required>
+                <small style="color: #666;">請輸入您的完整會員編號</small>
+            </div>
+            
+            <div class="form-group">
+                <label>收件人姓名 <span class="required">*</span></label>
+                <input type="text" id="receiverName" placeholder="請輸入收件人姓名" required>
+            </div>
+            
+            <div class="form-group">
+                <label>聯絡電話 <span class="required">*</span></label>
+                <input type="tel" id="phone" placeholder="請輸入您的聯絡電話" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" placeholder="用於接收訂單通知">
+            </div>
+            
+            <!-- 倉庫選擇 -->
+            <div class="form-group">
+                <label>選擇集運倉庫 <span class="required">*</span></label>
+                <select id="warehouse" required>
+                    <option value="xiamen">廈門漳州倉（海快）- 7-10天</option>
+                    <option value="yiwu">義烏倉（海快）- 7-10天</option>
+                    <option value="shenzhen">深圳倉（空運/海快）- 3-5天/7-10天</option>
+                </select>
+            </div>
+            
+            <!-- 倉庫資訊顯示 -->
+            <div class="warehouse-info">
+                <h3> 倉庫收件資訊</h3>
+                <p><strong>收件人：</strong><span id="warehouseReceiver">-</span></p>
+                <p><strong>地址：</strong><span id="warehouseAddress">-</span></p>
+                <p><strong>電話：</strong>13682536948</p>
+                <p style="color: #666; margin-top: 10px;">
+                    <i class="fas fa-info-circle"></i> 
+                    商品將直接發送到此倉庫，請確認會員編號正確
+                </p>
+            </div>
+            
+            <!-- 付款方式 -->
+            <div class="form-group">
+                <label>付款方式 <span class="required">*</span></label>
+                <div class="payment-methods">
+                    <div class="payment-option selected" data-method="bank">
+                        <h4> 銀行轉帳</h4>
+                        <p>台灣銀行 (004)</p>
+                        <p>帳號：123-456-789012</p>
+                        <p>戶名：代購平台有限公司</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 訂單摘要 -->
+            <div class="order-summary">
+                <h3>訂單摘要</h3>
+                <div id="orderItems"></div>
+                <div class="summary-row">
+                    <span>商品小計</span>
+                    <span id="subtotal">NT$ 0</span>
+                </div>
+                <div class="summary-row">
+                    <span>代購服務費 (8%)</span>
+                    <span id="serviceFee">NT$ 0</span>
+                </div>
+                <div class="summary-row">
+                    <span>國際運費</span>
+                    <span id="shippingFee">NT$ 350</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>總計</span>
+                    <span id="totalAmount">NT$ 0</span>
+                </div>
+            </div>
+            
+            <!-- 備註 -->
+            <div class="form-group">
+                <label>備註</label>
+                <textarea id="notes" rows="3" placeholder="如有特殊需求請在此說明"></textarea>
+            </div>
+            
+            <!-- 按鈕 -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="button" class="btn btn-secondary" onclick="history.back()">
+                    <i class="fas fa-arrow-left"></i> 返回購物車
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-check"></i> 確認下單
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        // 載入購物車資料
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const memberInfo = JSON.parse(localStorage.getItem('memberInfo')) || {};
+        
+        // 自動填入會員資訊
+        if (memberInfo.memberCode) {
+            document.getElementById('memberCode').value = memberInfo.memberCode;
+            document.getElementById('receiverName').value = memberInfo.receiverName || '';
+        }
+        
+        // 更新倉庫資訊
+        function updateWarehouseInfo() {
+            const memberCode = document.getElementById('memberCode').value;
+            const receiverName = document.getElementById('receiverName').value;
+            const warehouse = document.getElementById('warehouse').value;
+            
+            const warehouseAddresses = {
+                xiamen: '中國-福建省-漳州市-龍海區 東園鎮倉里路普洛斯物流園A02庫',
+                yiwu: '中國-浙江省-金華市-義烏市 江東街道東新路19號1號樓',
+                shenzhen: '中國-廣東省-深圳市-寶安區 福海街道福安路145號'
+            };
+            
+            if (memberCode && receiverName) {
+                document.getElementById('warehouseReceiver').textContent = 
+                    `${receiverName}-${memberCode}`;
+            }
+            
+            document.getElementById('warehouseAddress').textContent = 
+                warehouseAddresses[warehouse] || '-';
+        }
+        
+        // 計算訂單金額
+        function calculateOrder() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const serviceFee = Math.round(subtotal * 0.08);
+            const shippingFee = 350;
+            const total = subtotal + serviceFee + shippingFee;
+            
+            document.getElementById('subtotal').textContent = `NT$ ${subtotal.toLocaleString()}`;
+            document.getElementById('serviceFee').textContent = `NT$ ${serviceFee.toLocaleString()}`;
+            document.getElementById('shippingFee').textContent = `NT$ ${shippingFee.toLocaleString()}`;
+            document.getElementById('totalAmount').textContent = `NT$ ${total.toLocaleString()}`;
+            
+            // 顯示商品列表
+            const itemsHtml = cart.map(item => `
+                <div style="margin-bottom: 10px;">
+                    ${item.title} x ${item.quantity} = NT$ ${(item.price * item.quantity).toLocaleString()}
+                </div>
+            `).join('');
+            document.getElementById('orderItems').innerHTML = itemsHtml;
+        }
+        
+        // 監聽輸入變化
+        document.getElementById('memberCode').addEventListener('input', updateWarehouseInfo);
+        document.getElementById('receiverName').addEventListener('input', updateWarehouseInfo);
+        document.getElementById('warehouse').addEventListener('change', updateWarehouseInfo);
+        
+        // 表單提交
+        document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // 驗證會員編號格式
+            const memberCode = document.getElementById('memberCode').value;
+            if (!memberCode.match(/^935-170-\d+$/)) {
+                alert('請輸入正確的會員編號格式：935-170-XXXXX');
+                return;
+            }
+            
+            // 準備訂單資料
+            const orderData = {
+                memberCode: memberCode,
+                receiverName: document.getElementById('receiverName').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                warehouse: document.getElementById('warehouse').value,
+                items: cart,
+                notes: document.getElementById('notes').value,
+                totalAmount: calculateOrder().total,
+                createdAt: new Date().toISOString()
+            };
+            
+            // 儲存訂單
+            localStorage.setItem('currentOrder', JSON.stringify(orderData));
+            
+            // 清空購物車
+            localStorage.removeItem('cart');
+            
+            // 跳轉到訂單成功頁面
+            alert('訂單已建立成功！請依照指示完成轉帳。');
+            window.location.href = 'payment-upload.html';
+        });
+        
+        // 初始化
+        updateWarehouseInfo();
+        calculateOrder();
+    </script>
+</body>
+</html>
+

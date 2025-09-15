@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>會員註冊 - 代購平台</title>
+    <link rel="stylesheet" href="../css/shopee-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .register-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 450px;
+        }
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            color: #EE4D2D;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        input:focus {
+            outline: none;
+            border-color: #EE4D2D;
+            box-shadow: 0 0 0 3px rgba(238, 77, 45, 0.1);
+        }
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            background: #EE4D2D;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-register:hover {
+            background: #D73211;
+        }
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .links a {
+            color: #EE4D2D;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .member-code-info {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #EE4D2D;
+        }
+        .member-code-info h4 {
+            color: #EE4D2D;
+            margin-bottom: 10px;
+        }
+        .member-code-info p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .required {
+            color: #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-header">
+            <div class="logo">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h2>會員註冊</h2>
+        </div>
+        
+        <div class="member-code-info">
+            <h4><i class="fas fa-info-circle"></i> 跑跑虎會員編號說明</h4>
+            <p> 請輸入您在跑跑虎集運的會員編號<br>
+                會員編號沒有固定格式，請按實際編號填寫<br>
+                如需申請跑跑虎會員，請先到跑跑虎官網註冊<br>
+                會員編號將用於集運倉庫收件識別</p>
+        </div>
+        
+        <form id="registerForm">
+            <div class="form-group">
+                <label>跑跑虎會員編號 <span class="required">*</span></label>
+                <input type="text" id="memberCode" placeholder="請輸入您的跑跑虎會員編號" required>
+            </div>
+            
+            <div class="form-group">
+                <label>姓名 <span class="required">*</span></label>
+                <input type="text" id="memberName" placeholder="請輸入您的真實姓名" required>
+            </div>
+            
+            <div class="form-group">
+                <label>電子郵件 <span class="required">*</span></label>
+                <input type="email" id="email" placeholder="your@email.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label>手機號碼</label>
+                <input type="tel" id="phone" placeholder="09XXXXXXXX">
+            </div>
+            
+            <div class="form-group">
+                <label>密碼 <span class="required">*</span></label>
+                <input type="password" id="password" placeholder="請輸入密碼" required minlength="6">
+            </div>
+            
+            <div class="form-group">
+                <label>確認密碼 <span class="required">*</span></label>
+                <input type="password" id="confirmPassword" placeholder="請再次輸入密碼" required>
+            </div>
+            
+            <button type="submit" class="btn-register">註冊帳號</button>
+        </form>
+        
+        <div class="links">
+            <a href="/member-login">已有帳號？登入</a>
+            <a href="/">返回首頁</a>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const memberCode = document.getElementById("memberCode").value.trim();
+            const memberName = document.getElementById("memberName").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            
+            // 驗證會員編號
+            if (!memberCode) {
+                alert("請輸入跑跑虎會員編號");
+                return;
+            }
+            
+            if (memberCode.length < 3) {
+                alert("會員編號長度至少需要3位字符");
+                return;
+            }
+            
+            // 驗證姓名
+            if (!memberName) {
+                alert("請輸入姓名");
+                return;
+            }
+            
+            // 驗證密碼確認
+            if (password !== confirmPassword) {
+                alert("密碼和確認密碼不一致");
+                return;
+            }
+            
+            // 檢查會員編號是否已存在
+            const existingMembers = JSON.parse(localStorage.getItem("members") || "[]");
+            if (existingMembers.find(m => m.memberCode === memberCode)) {
+                alert("此會員編號已被註冊");
+                return;
+            }
+            
+            // 註冊成功，儲存會員資訊
+            const memberInfo = {
+                id: Date.now(),
+                memberCode: memberCode,
+                memberName: memberName,
+                email: email,
+                phone: document.getElementById("phone").value.trim(),
+                registeredAt: new Date().toISOString(),
+                status: "active",  // 預設為啟用狀態
+                orderCount: 0,
+                totalSpent: 0
+            };
+            
+            // 保存到會員列表
+            existingMembers.push(memberInfo);
+            localStorage.setItem("members", JSON.stringify(existingMembers));
+            
+            // 設為當前登入會員
+            localStorage.setItem("memberInfo", JSON.stringify(memberInfo));
+            
+            alert("註冊成功！歡迎加入代購平台，您的帳號已自動啟用");
+            window.location.href = "/";
+        });
+        
+        // 即時驗證會員編號長度
+        document.getElementById("memberCode").addEventListener("input", function(e) {
+            const value = e.target.value.trim();
+            if (value && value.length < 3) {
+                e.target.style.borderColor = "#ff4444";
+                e.target.title = "會員編號長度至少需要3位字符";
+            } else {
+                e.target.style.borderColor = "#ddd";
+                e.target.title = "";
+            }
+        });
+    </script>
+</body>
+</html>

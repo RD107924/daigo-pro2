@@ -1,6 +1,7 @@
 ﻿# Dependencies
 node_modules/
 package-lock.json
+npm-debug.log*
 
 # Environment files
 .env
@@ -9,7 +10,7 @@ package-lock.json
 
 # Logs
 *.log
-npm-debug.log*
+logs/
 
 # OS files
 .DS_Store
@@ -32,3 +33,11 @@ temp/
 # Backup files
 *.backup
 *-backup.*
+
+# Database files
+*.sqlite
+*.db
+
+# Sensitive config (保留 example 文件)
+config/settings.json
+!config/settings.example.json

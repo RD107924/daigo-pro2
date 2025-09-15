@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>會員登入 - 代購平台</title>
+    <link rel="stylesheet" href="../css/shopee-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            color: #EE4D2D;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: #EE4D2D;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-login:hover {
+            background: #D73211;
+        }
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .links a {
+            color: #EE4D2D;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h2>會員登入</h2>
+        </div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>跑跑虎會員編號</label>
+                <input type="text" id="memberCode" placeholder="請輸入您的跑跑虎會員編號" required>
+            </div>
+            <div class="form-group">
+                <label>姓名</label>
+                <input type="text" id="memberName" placeholder="請輸入您的姓名" required>
+            </div>
+            <button type="submit" class="btn-login">登入</button>
+        </form>
+        <div class="links">
+            <a href="/register">註冊新帳號</a>
+            <a href="/">返回首頁</a>
+        </div>
+    </div>
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const memberCode = document.getElementById("memberCode").value.trim();
+            const memberName = document.getElementById("memberName").value.trim();
+            
+            // 驗證會員編號
+            if (!memberCode) {
+                alert("請輸入跑跑虎會員編號");
+                return;
+            }
+            
+            if (memberCode.length < 3) {
+                alert("會員編號長度不正確");
+                return;
+            }
+            
+            // 驗證姓名
+            if (!memberName) {
+                alert("請輸入姓名");
+                return;
+            }
+            
+            // 檢查會員是否存在
+            const members = JSON.parse(localStorage.getItem("members") || "[]");
+            const existingMember = members.find(m => 
+                m.memberCode === memberCode && m.memberName === memberName
+            );
+            
+            if (existingMember) {
+                // 更新最後登入時間
+                existingMember.lastLoginAt = new Date().toISOString();
+                localStorage.setItem("members", JSON.stringify(members));
+                
+                // 設為當前登入會員
+                localStorage.setItem("memberInfo", JSON.stringify(existingMember));
+                alert("登入成功！歡迎回來，" + memberName);
+            } else {
+                // 如果不存在，創建新會員（簡化登入）
+                const memberInfo = {
+                    id: Date.now(),
+                    memberCode: memberCode,
+                    memberName: memberName,
+                    registeredAt: new Date().toISOString(),
+                    lastLoginAt: new Date().toISOString(),
+                    status: "active",
+                    orderCount: 0,
+                    totalSpent: 0
+                };
+                
+                members.push(memberInfo);
+                localStorage.setItem("members", JSON.stringify(members));
+                localStorage.setItem("memberInfo", JSON.stringify(memberInfo));
+                alert("首次登入成功！已為您建立會員資料");
+            }
+            
+            window.location.href = "/";
+        });
+    </script>
+</body>
+</html>

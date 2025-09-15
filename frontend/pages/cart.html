@@ -21,9 +21,7 @@
         .cart-summary { background: white; border-radius: 8px; padding: 20px; height: fit-content; }
         .checkout-btn { width: 100%; background: #EE4D2D; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; cursor: pointer; }
         .empty-cart { text-align: center; padding: 60px 20px; }
-        @media (max-width: 768px) {
-            .cart-content { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 768px) { .cart-content { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -55,6 +53,10 @@
                     <span id="subtotal">NT$ 0</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin: 15px 0;">
+                    <span>服務費 (8%)</span>
+                    <span id="serviceFee">NT$ 0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin: 15px 0;">
                     <span>運費</span>
                     <span>NT$ 350</span>
                 </div>
@@ -63,7 +65,7 @@
                     <span>總計</span>
                     <span id="total" style="color: #EE4D2D;">NT$ 350</span>
                 </div>
-                <button class="checkout-btn" onclick="window.location.href='/checkout'">前往結帳</button>
+                <button class="checkout-btn" onclick="goToCheckout()">前往結帳</button>
             </div>
         </div>
     </div>
@@ -80,45 +82,65 @@
             let html = '';
             let subtotal = 0;
             
-            cart.forEach(item => {
-                html += '<div class="cart-item">';
-                html += '<div class="item-image"><img src="' + (item.image || 'https://via.placeholder.com/100') + '"></div>';
-                html += '<div class="item-details">';
-                html += '<div class="item-title">' + item.title + '</div>';
-                html += '<div class="item-price">NT$ ' + item.price + '</div>';
-                html += '<div class="quantity-control">';
-                html += '<button class="quantity-btn" onclick="updateQuantity(' + item.id + ', -1)">-</button>';
-                html += '<span>' + item.quantity + '</span>';
-                html += '<button class="quantity-btn" onclick="updateQuantity(' + item.id + ', 1)">+</button>';
-                html += '</div></div>';
-                html += '<button onclick="removeItem(' + item.id + ')" style="border: none; background: none; color: #999; cursor: pointer;"><i class="fas fa-trash"></i></button>';
-                html += '</div>';
+            cart.forEach((item, index) => {
+                html += `<div class="cart-item">
+                    <div class="item-image">
+                        <img src="${item.image || 'https://via.placeholder.com/100'}" alt="${item.title}">
+                    </div>
+                    <div class="item-details">
+                        <div class="item-title">${item.title}</div>
+                        <div class="item-price">NT$ ${item.price.toLocaleString()}</div>
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                            <span style="padding: 0 15px;">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                            <button onclick="removeItem(${index})" style="margin-left: 20px; border: none; background: none; color: #999; cursor: pointer;">
+                                <i class="fas fa-trash"></i> 移除
+                            </button>
+                        </div>
+                    </div>
+                    <div style="font-weight: bold; color: #EE4D2D;">
+                        NT$ ${(item.price * item.quantity).toLocaleString()}
+                    </div>
+                </div>`;
                 
                 subtotal += item.price * item.quantity;
             });
             
             cartItems.innerHTML = html;
-            document.getElementById('subtotal').textContent = 'NT$ ' + subtotal.toLocaleString();
-            document.getElementById('total').textContent = 'NT$ ' + (subtotal + 350).toLocaleString();
+            
+            const serviceFee = Math.round(subtotal * 0.08);
+            const shippingFee = 350;
+            const total = subtotal + serviceFee + shippingFee;
+            
+            document.getElementById('subtotal').textContent = `NT$ ${subtotal.toLocaleString()}`;
+            document.getElementById('serviceFee').textContent = `NT$ ${serviceFee.toLocaleString()}`;
+            document.getElementById('total').textContent = `NT$ ${total.toLocaleString()}`;
         }
         
-        function updateQuantity(id, change) {
+        function updateQuantity(index, change) {
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const item = cart.find(i => i.id === id);
-            if (item) {
-                item.quantity = Math.max(1, item.quantity + change);
-                localStorage.setItem('cart', JSON.stringify(cart));
-                loadCart();
-            }
+            cart[index].quantity = Math.max(1, cart[index].quantity + change);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
         }
         
-        function removeItem(id) {
+        function removeItem(index) {
             if (confirm('確定要移除此商品嗎？')) {
                 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                cart = cart.filter(i => i.id !== id);
+                cart.splice(index, 1);
                 localStorage.setItem('cart', JSON.stringify(cart));
                 loadCart();
             }
+        }
+        
+        function goToCheckout() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            if (cart.length === 0) {
+                alert('購物車是空的！');
+                return;
+            }
+            window.location.href = '/checkout';
         }
         
         loadCart();

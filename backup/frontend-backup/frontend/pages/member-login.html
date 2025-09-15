@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>會員登入 - 代購平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #EE4D2D;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background: #D73211;
+        }
+        .link-row {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .link-row a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2><i class="fas fa-user-circle"></i> 會員登入</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>會員編號</label>
+                <input type="text" id="memberCode" placeholder="935-170-XXXXX" required>
+            </div>
+            <div class="form-group">
+                <label>姓名</label>
+                <input type="text" id="memberName" placeholder="請輸入您的姓名" required>
+            </div>
+            <button type="submit" class="btn">登入</button>
+        </form>
+        <div class="link-row">
+            <a href="/">訪客瀏覽</a>
+            <a href="/register">註冊新會員</a>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const memberCode = document.getElementById('memberCode').value;
+            const memberName = document.getElementById('memberName').value;
+            
+            // 驗證會員編號格式
+            if (!memberCode.match(/^935-170-\d+$/)) {
+                alert('請輸入正確的會員編號格式');
+                return;
+            }
+            
+            // 儲存會員資訊
+            const memberInfo = {
+                memberCode: memberCode,
+                memberName: memberName,
+                loginTime: new Date().toISOString()
+            };
+            
+            localStorage.setItem('memberInfo', JSON.stringify(memberInfo));
+            alert('登入成功！');
+            window.location.href = '/';
+        });
+    </script>
+</body>
+</html>

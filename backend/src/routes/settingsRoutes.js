@@ -9,8 +9,8 @@ const settingsFile = path.join(__dirname, '../../../config/settings.json');
 // 取得設定
 router.get('/settings', (req, res) => {
     try {
-        // 從 localStorage 或檔案讀取設定
-        const settings = {
+        // 預設設定
+        const defaultSettings = {
             platformName: '代購平台',
             bankName: '台灣銀行',
             bankCode: '004',
@@ -23,9 +23,14 @@ router.get('/settings', (req, res) => {
         };
         
         // 如果檔案存在，讀取檔案
+        let settings = defaultSettings;
         if (fs.existsSync(settingsFile)) {
-            const fileSettings = JSON.parse(fs.readFileSync(settingsFile, 'utf8'));
-            Object.assign(settings, fileSettings);
+            try {
+                const fileSettings = JSON.parse(fs.readFileSync(settingsFile, 'utf8'));
+                settings = { ...defaultSettings, ...fileSettings };
+            } catch (error) {
+                console.error('讀取設定檔失敗:', error);
+            }
         }
         
         res.json({ success: true, data: settings });
