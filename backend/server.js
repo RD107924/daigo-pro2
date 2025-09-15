@@ -1,5 +1,4 @@
-﻿// server.js - 代購平台後端主程式
-const express = require('express');
+﻿const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -13,18 +12,55 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// 重要：提供靜態檔案
+// 提供靜態檔案
 app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
 app.use('/js', express.static(path.join(__dirname, '../frontend/js')));
-app.use('/pages', express.static(path.join(__dirname, '../frontend/pages')));
+app.use('/admin', express.static(path.join(__dirname, '../frontend/admin')));
 
-// 根路徑提供 index.html
+// API 路由
+const userRoutes = require('./src/routes/userRoutes');
+const productRoutes = require('./src/routes/productRoutes');
+const orderRoutes = require('./src/routes/orderRoutes');
+const adminRoutes = require('./src/routes/adminRoutes');
+const paymentRoutes = require('./src/routes/paymentRoutes');
+
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/payment', paymentRoutes);
+
+// 頁面路由
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/pages/index.html'));
 });
 
-// API 路由
+app.get('/cart', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/pages/cart.html'));
+});
+
+app.get('/checkout', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/pages/checkout.html'));
+});
+
+app.get('/payment-upload', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/pages/payment-upload.html'));
+});
+
+app.get('/order-tracking', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/pages/order-tracking.html'));
+});
+
+app.get('/admin/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/admin/login.html'));
+});
+
+app.get('/admin/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/admin/dashboard.html'));
+});
+
+// API 健康檢查
 app.get('/api/health', (req, res) => {
     res.json({ 
         status: 'ok', 
@@ -33,37 +69,18 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-app.get('/api/products', (req, res) => {
-    res.json({
-        success: true,
-        data: [
-            {
-                id: 1,
-                title: "測試商品",
-                price: 999,
-                image: "https://via.placeholder.com/300"
-            }
-        ]
-    });
-});
-
-app.get('/api/warehouses', (req, res) => {
-    res.json([
-        {
-            id: 'xiamen',
-            name: '廈門漳州倉（海快）',
-            address: '中國-福建省-漳州市-龍海區'
-        }
-    ]);
-});
-
 // 404 處理
 app.use((req, res) => {
     res.status(404).send('頁面不存在');
 });
 
-// 啟動伺服器
+// 錯誤處理
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('伺服器錯誤！');
+});
+
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`Static files served from: ${path.join(__dirname, '../frontend')}`);
+    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Admin panel: http://localhost:${PORT}/admin/login`);
 });
